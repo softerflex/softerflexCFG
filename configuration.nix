@@ -43,11 +43,12 @@
   };
 
   # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
+  console.keyMap = "us";
+  services.xserver = {
+    xkb.layout = "us,ru";
+    xkb.variant = "";
+    xkb.options = "grp:alt_shift_toggle";
   };
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.softerflex = {
     isNormalUser = true;
@@ -59,9 +60,25 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+nix.settings.experimental-features = ["nix-command" "flakes"];
+
 services.flatpak.enable = true;
-#HyprLand
-programs.hyprland.enable = true;
+programs.niri.enable = true;
+programs.throne = {
+ enable = true;
+ tunMode.enable = true;
+};
+#Greetd
+services.greetd = {
+ enable = true;
+ settings = {
+
+  default_session = {
+   command = "niri";
+   user = "softerflex";
+  };
+ };
+};
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -73,24 +90,26 @@ curl
 unzip
 neovim
 btop
+xarchiver
 fastfetch
-
+discord
 modrinth-app
-sing-box
 prismlauncher
+ayugram-desktop
+firefox
 
+yazi
+alacritty
+xfce.thunar
+steam-run
 acpi
 kitty
 waybar
-mako
 rofi
 wl-clipboard
-swww
-wofi
-rofi
-dunst
 grim
-slurp
+mako
+networkmanagerapplet
   ];
  environment.sessionVariables = {
    NIXOS_OZONE_WL = "1";
