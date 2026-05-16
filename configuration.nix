@@ -62,16 +62,45 @@
 
 nix.settings.experimental-features = ["nix-command" "flakes"];
 
+#Flatpak
 services.flatpak.enable = true;
+
+#Niri
 programs.niri.enable = true;
+
+#Throne
 programs.throne = {
  enable = true;
  tunMode.enable = true;
 };
+
+#Waybar
+programs.waybar = {
+  enable = true;
+};
+
 #Greetd
 services.greetd = {
  enable = true;
  settings = {
+
+#Какие то блять нахуй порталы ебаные
+xdg.portal = {
+  enable = true;
+  xdgOpenUsePortal = true;
+  extraPortals = [ 
+    pkgs.xdg-desktop-portal-gtk
+    pkgs.xdg-desktop-portal-gnome
+  ];
+  config = {
+    common = {
+      default = [ "gtk" ];
+    };
+    niri = {
+      default = [ "gtk" ];
+    };
+  };
+};
 
   default_session = {
    command = "niri";
@@ -82,8 +111,12 @@ services.greetd = {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+#Шрифты
+font-awesome
+nerd-fonts._3270
+lexend
+
+#Гиты, курлы, фастфетчи и прочая хуита
 git
 wget
 curl
@@ -92,28 +125,44 @@ neovim
 btop
 xarchiver
 fastfetch
+acpi
+steam-run
+
+#Программы
 discord
 modrinth-app
 prismlauncher
 ayugram-desktop
 firefox
 
-yazi
+#Всякая залупа для ВМки
 alacritty
 xfce.thunar
-steam-run
-acpi
-kitty
-waybar
 rofi
-wl-clipboard
-grim
-mako
-networkmanagerapplet
   ];
  environment.sessionVariables = {
    NIXOS_OZONE_WL = "1";
+   GBM_BACKEND = "nvidia-drm";
+   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+   LIBVA_DRIVER_NAME = "nvidia";
+   NVD_BACKEND = "direct";
  };
+
+# NVIDIA GTX 1060
+services.xserver.videoDrivers = [ "nvidia" ];
+
+hardware.nvidia = {
+  modesetting.enable = true;
+  powerManagement.enable = false;
+  open = false;
+  nvidiaSettings = true;
+  package = config.boot.kernelPackages.nvidiaPackages.stable;
+};
+
+hardware.graphics = {
+  enable = true;
+  enable32Bit = true;
+};
 
 
 # fonts.packages = with pkgs; [
